@@ -1,13 +1,15 @@
 import { Avatar } from '../Avatar'
+import { Comment } from '../Comment'
 import styles from './Post.module.css'
-export function Post() {
+
+export function Post({author, content}) {
     return (
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
                     <Avatar className={styles.avatar} img="https://avatars.githubusercontent.com/u/50570879?v=4" />
                     <div className={styles.authorInfo}>
-                        <strong>Simão José</strong>
+                        <strong>{author}</strong>
                         <span>Dev Front-End</span>
                     </div>
                 </div>
@@ -17,15 +19,32 @@ export function Post() {
                 <p className={styles.title}>Fala galeraa 👋</p>
 
                 <p className={styles.paragraph}>
-                    Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, 
-                    evento da Rocketseat. O nome do projeto é DoctorCare 🚀
+                    {content}
                 </p>
 
                 <p className={styles.link}>
-                    👉 <a href="#">jane.design/doctorcare</a>
+                    👉{' '}<a href="#">jane.design/doctorcare</a>
                 </p>
 
-                <p><a href="#">#novoprojeto #nlw #rocketseat</a></p>
+                <p>
+                    <a href="#">#novoprojeto</a>{' '}
+                    <a href="#">#nlw</a>{' '}
+                    <a href="#">#rocketseat</a>{' '}
+                </p>
+            </div>
+
+            <form className={styles.commentForm}>
+                <strong>Deixe seu feedback</strong>
+
+                <textarea name="" id="" placeholder='Escreva um  comentário'></textarea>
+                <footer>
+                    <button type='submit' >Comentar</button>
+                </footer>
+            </form>
+            <div className={styles.commentList}>
+                <Comment />
+                <Comment />
+                <Comment />
             </div>
         </article>
     )
