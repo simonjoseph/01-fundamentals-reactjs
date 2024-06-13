@@ -1,25 +1,57 @@
+import {format, formatDistanceToNow} from 'date-fns'
+import ptBr from 'date-fns/locale/pt-BR'
+
 import { Avatar } from '../Avatar'
 import { Comment } from '../Comment'
 import styles from './Post.module.css'
+import { useState } from 'react'
 
-export function Post({author, content}) {
+export function Post({author, content, publishedAt}) {
+
+    const [comments, SetComments] = useState([
+        'Post muito bacana, hein 👏👏'
+    ])
+
+    const [newCommentText, setNewComentText] = useState('')
+
+    const publishedDateFormated = format(publishedAt, "d 'de' LLL 'ás' HH:mm'h'", {
+        locale: ptBr,
+    });
+
+    const publishededDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBr,
+        addSuffix: true,
+    });
+
+    function handleCreateNewComment(){
+        event.preventDefault()
+        SetComments([...comments, newCommentText]);
+        setNewComentText('')
+    }
+
+    function handleNewsCommentChange(){
+        setNewComentText(event.target.value)
+    }
+
     return (
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <Avatar className={styles.avatar} img="https://avatars.githubusercontent.com/u/50570879?v=4" />
+                    <Avatar className={styles.avatar} img={author.avatar} />
                     <div className={styles.authorInfo}>
-                        <strong>{author}</strong>
-                        <span>Dev Front-End</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
-                <time title='11 de Maio ás 08:13h' datetime="2020-05-11 08:13:30">Publicado há 1h</time>
+                <time title={publishedDateFormated} dateTime={publishedAt}>{publishededDateRelativeToNow}</time>
             </header>
             <div className={styles.content}>
                 <p className={styles.title}>Fala galeraa 👋</p>
 
                 <p className={styles.paragraph}>
-                    {content}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ea fugiat, 
+            laborum sit, animi consectetur, asperiores ducimus at fuga quia ipsum. Ipsa, placeat dicta. Numquam 
+            maxime aspernatur ratione optio suscipit! 🚀
                 </p>
 
                 <p className={styles.link}>
@@ -33,18 +65,18 @@ export function Post({author, content}) {
                 </p>
             </div>
 
-            <form className={styles.commentForm}>
+            <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
 
-                <textarea name="" id="" placeholder='Escreva um  comentário'></textarea>
+                <textarea value={newCommentText} onChange={handleNewsCommentChange} name="comment" id="" placeholder='Escreva um  comentário'></textarea>
                 <footer>
                     <button type='submit' >Comentar</button>
                 </footer>
             </form>
             <div className={styles.commentList}>
-                <Comment />
-                <Comment />
-                <Comment />
+                {comments.map(comment => {
+                    return <Comment content={comment} />
+                })}
             </div>
         </article>
     )
