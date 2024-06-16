@@ -61,6 +61,7 @@
 
     display: flex;
     align-items: center;
+    padding-top: .625rem;
 }
 
 .commentBox footer button:hover{

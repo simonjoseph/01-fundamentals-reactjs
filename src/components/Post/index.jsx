@@ -30,8 +30,20 @@ export function Post({author, content, publishedAt}) {
     }
 
     function handleNewsCommentChange(){
+        event.target.setCustomValidity('')
         setNewComentText(event.target.value)
     }
+
+    function handleNewCommentInvalid(){
+        event.target.setCustomValidity('Esse campo e obrigatório')
+    }
+
+    function deletarComent(comment){
+        const commentsWithoutDeletedOne = comments.filter((item) => item !== comment)
+        SetComments(commentsWithoutDeletedOne)
+    }
+
+    const isNewCommentEmpty = newCommentText.length === 0;
 
     return (
         <article className={styles.post}>
@@ -46,36 +58,47 @@ export function Post({author, content, publishedAt}) {
                 <time title={publishedDateFormated} dateTime={publishedAt}>{publishededDateRelativeToNow}</time>
             </header>
             <div className={styles.content}>
-                <p className={styles.title}>Fala galeraa 👋</p>
+                {/* <p className={styles.title}>{content[0].content}</p> */}
 
-                <p className={styles.paragraph}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos ea fugiat, 
-            laborum sit, animi consectetur, asperiores ducimus at fuga quia ipsum. Ipsa, placeat dicta. Numquam 
-            maxime aspernatur ratione optio suscipit! 🚀
-                </p>
-
-                <p className={styles.link}>
-                    👉{' '}<a href="#">jane.design/doctorcare</a>
-                </p>
-
-                <p>
-                    <a href="#">#novoprojeto</a>{' '}
-                    <a href="#">#nlw</a>{' '}
-                    <a href="#">#rocketseat</a>{' '}
-                </p>
+                {content.map(line => {
+                    if (line.type === 'paragraph') {
+                        return <p key={line.content}>{line.content}</p>
+                    }else if (line.type === 'link') {
+                        return <p key={line.content}><a href="#">{line.content}</a></p>
+                    }
+                })}
             </div>
 
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
 
-                <textarea value={newCommentText} onChange={handleNewsCommentChange} name="comment" id="" placeholder='Escreva um  comentário'></textarea>
+                <textarea 
+                    value={newCommentText} 
+                    onChange={handleNewsCommentChange} 
+                    name="comment" 
+                    id="" 
+                    placeholder='Escreva um  comentário'
+                    onInvalid={handleNewCommentInvalid}
+                    required
+                >
+                </textarea>
                 <footer>
-                    <button type='submit' >Comentar</button>
+                    <button 
+                        className={styles.commentFormButton} 
+                        type='submit' disabled={isNewCommentEmpty} 
+                    >
+                        Comentar
+                    </button>
                 </footer>
             </form>
             <div className={styles.commentList}>
                 {comments.map(comment => {
-                    return <Comment content={comment} />
+                    return (
+                        <Comment 
+                            key={comment} 
+                            content={comment} 
+                            onDeleteComment={deletarComent} 
+                        />)
                 })}
             </div>
         </article>
